@@ -18,13 +18,21 @@ OPTIONS_USER = 3
 
 _SERVICEMP3_REPLACE_PATH = eEnv.resolve("$sysconfdir/enigma2/serviceapp_replaceservicemp3")
 
+# Determine available gstplayer binary
+_GSTPLAYER_CANDIDATES = ("gstplayer_gst-1.0", "gstplayer")
+GSTPLAYER_BIN = None
+for _name in _GSTPLAYER_CANDIDATES:
+        if os.path.isfile(eEnv.resolve("$bindir/" + _name)):
+                GSTPLAYER_BIN = _name
+                break
+
 
 def isExtEplayer3Available():
-	return os.path.isfile(eEnv.resolve("$bindir/exteplayer3"))
+        return os.path.isfile(eEnv.resolve("$bindir/exteplayer3"))
 
 
 def isGstPlayerAvailable():
-	return os.path.isfile(eEnv.resolve("$bindir/gstplayer_gst-1.0"))
+        return GSTPLAYER_BIN is not None
 
 
 def isServiceMP3Replaced():

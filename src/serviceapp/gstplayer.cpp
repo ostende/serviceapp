@@ -1,6 +1,8 @@
 #include <sstream>
 
 #include <lib/base/eerror.h>
+#include <lib/base/eenv.h>
+#include <unistd.h>
 #include "gstplayer.h"
 
 const std::string GST_DOWNLOAD_BUFFER_PATH = "download_buffer_path";
@@ -110,9 +112,17 @@ GstPlayer::GstPlayer(GstPlayerOptions& options): PlayerApp(STD_ERROR)
 
 std::vector<std::string> GstPlayer::buildCommand()
 {
-	std::vector<std::string> args;
-	args.push_back("gstplayer_gst-1.0");
-	args.push_back(mPath);
+        std::vector<std::string> args;
+        std::string binary = "gstplayer_gst-1.0";
+        std::string path = eEnv::resolve(std::string("$bindir/") + binary);
+        if (access(path.c_str(), X_OK) != 0)
+        {
+                std::string alt = eEnv::resolve("$bindir/gstplayer");
+                if (access(alt.c_str(), X_OK) == 0)
+                        binary = "gstplayer";
+        }
+        args.push_back(binary);
+        args.push_back(mPath);
 	for (std::map<std::string,std::string>::const_iterator i(mHeaders.begin()); i!=mHeaders.end(); i++)
 	{
 		args.push_back("-H");
