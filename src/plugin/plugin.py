@@ -33,6 +33,7 @@ if (os.path.isfile(eEnv.resolve("$libdir/gstreamer-1.0/libgstdvbvideosinkexp.so"
 player_choices = [("gstplayer", _("gstplayer")), ("exteplayer3", _("exteplayer3"))]
 GSTPLAYER_VERSION = None
 EXTEPLAYER3_VERSION = None
+GSTPLAYER_BIN = serviceapp_client.GSTPLAYER_BIN or "gstplayer_gst-1.0"
 
 config.plugins.serviceapp                               = ConfigSubsection()
 config_serviceapp                                       = config.plugins.serviceapp
@@ -311,10 +312,10 @@ class ServiceAppDetectPlayers(Screen):
         Screen.__init__(self, session)
         self["text"] = Label()
         self.players_iter = iter(
-                [("gstplayer_gst-1.0", 
+                [(GSTPLAYER_BIN,
                     _("Detecting gstreamer player ..."),
                     self.detect_gstplayer),
-                 ("exteplayer3", 
+                 ("exteplayer3",
                      _("Detecting exteplayer3 player ..."),
                      self.detect_exteplayer3)
                  ])
